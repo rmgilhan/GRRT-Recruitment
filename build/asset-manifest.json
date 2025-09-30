@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.4c6de4fe.css",
+    "main.js": "/static/js/main.1cc00433.js",
+    "static/media/AboutUs.jpg": "/static/media/AboutUs.489d4bdfc0fd94c19aa8.jpg",
+    "static/media/OurServices.jpg": "/static/media/OurServices.592bb86414bc71aa8ae7.jpg",
+    "static/media/grrt-logo.png": "/static/media/grrt-logo.e6dcd311ac835148164a.png",
+    "index.html": "/index.html",
+    "main.4c6de4fe.css.map": "/static/css/main.4c6de4fe.css.map",
+    "main.1cc00433.js.map": "/static/js/main.1cc00433.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4c6de4fe.css",
+    "static/js/main.1cc00433.js"
+  ]
+}
