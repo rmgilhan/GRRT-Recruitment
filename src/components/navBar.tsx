@@ -37,9 +37,9 @@ export default function NavBar({ onLogoClick }) {
  };
 
  const navItems = [
-  { to: "/Home", icon: Briefcase, label: "Job" }, 
+  { to: "/", icon: Briefcase, label: "Home" }, 
   { to: "/Services", icon: Layers, label: "Services" },
-  { to: "/About", icon: Info, label: "About" }, 
+  { to: "/AboutUs", icon: Info, label: "About" }, 
   { to: "/Contact", icon: Mail, label: "Contact" },
  ];
 

@@ -4,6 +4,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import NavBar from "./components/navBar"
 import Footer from "./components/footer"
+import Services from "./components/Services"
+import AboutUs from "./components/AboutUs"
+import Contact from "./components/Contact"
 
 function App() {
   return (
@@ -12,6 +15,9 @@ function App() {
           <NavBar />
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/Services" element={<Services />} />
+            <Route path="/AboutUs" element={<AboutUs />} />
+            <Route path="/Contact" element={<Contact />} />
 
             {/* Authenticated Pages with NavBar */}
             {/*<Route element={<AppLayout />}>

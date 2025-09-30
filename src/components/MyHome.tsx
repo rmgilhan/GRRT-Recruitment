@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from "react-router-dom";
 import { Briefcase, Users, RefreshCw } from 'lucide-react';
 
 // External, responsive placeholder images and icon paths
@@ -16,7 +17,7 @@ const App = () => {
     // Simple state for the contact form (for demonstration)
     const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
-
+    
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -52,7 +53,7 @@ const App = () => {
     );
 
 	return (
-		<main className="font-sans antialiased text-gray-800 bg-gray-50">
+		<main className="antialiased text-gray-800 bg-gray-50">
             {/* Hero Section */}
 			<section className="max-w-7xl mx-auto py-12 md:py-20 px-4 md:px-8">
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -88,7 +89,7 @@ const App = () => {
 			</section>
 
             {/* About / Who We Are Section */}
-			<section className="bg-emerald-50 py-16 md:py-24 px-4 md:px-8">
+			<section className="bg-amber-50 py-16 md:py-24 px-4 md:px-8">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     {/* Image (Order 1 on mobile, 2 on desktop) */}
 				    <div className="order-1 md:order-2 flex justify-center">
@@ -102,12 +103,12 @@ const App = () => {
 						We provide tailored solutions, innovative strategies, and build meaningful, 
 						long-term relationships with clients, partners, and talent across various industries.
 						</p>
-						<button
-						 type="button"
+						<Link
+						  to="AboutUs#Mission"
 						 className="bg-amber-500 text-white font-semibold shadow-xl py-3 px-8 rounded-full hover:bg-amber-600 transition-colors"
 						>
 							Discover Our Mission
-						</button>
+						</Link>
 				    </div>
                 </div>
 			</section>
@@ -154,12 +155,12 @@ const App = () => {
 						companies. With **focus, clear communication, accountability, and respect for 
 						diversity**, we deliver recruitment solutions that make a real impact.
 						</p>
-						<button
-							type="button"
+						<Link
+							to="/AboutUs#Strength"
 							className="bg-emerald-600 text-white font-semibold shadow-xl py-3 px-8 rounded-full hover:bg-emerald-700 transition-colors"
 						>
 							Meet The Experts
-						</button>
+						</Link>
 				    </div>
                     {/* Image (Order 1 on mobile, 2 on desktop) */}
                     <div className="order-1 md:order-2 flex justify-center">
@@ -255,9 +256,7 @@ const App = () => {
 			        	</form>
 			        </div>
                 </div>
-                <div className="max-w-7xl mx-auto border-t border-gray-700 mt-12 pt-6 text-center text-gray-500 text-sm">
-                    &copy; {new Date().getFullYear()} GRRT Recruitment Services. All rights reserved.
-                </div>
+                
 			</footer>
 		</main>
 	);
