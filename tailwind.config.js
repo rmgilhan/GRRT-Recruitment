@@ -13,6 +13,12 @@ module.exports = {
         openSans: ['Open Sans', 'sans-serif'],
         montserrat: ['Montserrat', 'sans-serif']
       },
+      textShadow: {
+        sm: '1px 1px 2px rgba(0,0,0,0.25)',
+        md: '2px 2px 4px rgba(0,0,0,0.3)',
+        lg: '3px 3px 6px rgba(0,0,0,0.35)',
+        emboss: '1px 1px 0 #ccc, -1px -1px 0 #fff', // 👈 embossed effect
+      },
       fontSize: {
         // Modular Scale: Major Third (1.25)
         'step-0': ['clamp(1rem, 2vw, 1.125rem)', { lineHeight: '1.5' }],

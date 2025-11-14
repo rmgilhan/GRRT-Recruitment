@@ -47,7 +47,7 @@ export default function Contact() {
 
       {/* Contact Form */}
       <section className="py-16 px-6 bg-gray-50">
-        <div className="max-w-3xl mx-auto bg-white p-8 shadow-md rounded-2xl">
+        <div className="max-w-3xl mx-auto bg-amber-200 p-8 shadow-md rounded-2xl">
           <h2 className="text-2xl font-bold mb-6 text-center">Send Us a Message</h2>
           <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Name */}
@@ -90,7 +90,7 @@ export default function Contact() {
             <div className="col-span-2 text-center">
               <button
                 type="submit"
-                className="bg-primary text-white px-6 py-3 rounded-lg shadow hover:bg-primary/90 transition"
+                className="bg-emerald-500 text-white px-6 py-3 rounded-lg shadow hover:bg-emerald-700 transition"
               >
                 Send Message
               </button>

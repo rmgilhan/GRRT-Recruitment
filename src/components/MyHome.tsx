@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Briefcase, Users, RefreshCw } from 'lucide-react';
 
 // External, responsive placeholder images and icon paths
@@ -17,7 +17,19 @@ const App = () => {
     // Simple state for the contact form (for demonstration)
     const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showJobs, setShowJobs] = useState(false);
     
+    const navigate = useNavigate(); // ✅ Hook for routing
+  	
+  	 // ✅ Function to handle "Find Jobs" click
+  	const handleFindJobs = () => {
+    // Save a temporary flag (Navbar can check this)
+    localStorage.setItem("showJobsMenu", "true");
+
+    // Navigate to the Jobs page
+    navigate("/Jobs");
+  	};
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -58,29 +70,27 @@ const App = () => {
 			<section className="max-w-7xl mx-auto py-12 md:py-20 px-4 md:px-8">
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
 					{/* Text Content (Order 2 on mobile, 1 on desktop) */}
-					<div className="order-2 md:order-1 text-emerald-700">
-						<h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-center md:text-left leading-tight mb-4">
-							<span className="block">Finding Right Talent</span>
-							<span className="block text-amber-500 mt-2">Build Your Future.</span>
-						</h1>
-						<p className="text-lg md:text-xl lg:text-2xl mt-6 md:mt-8 max-w-xl mx-auto md:mx-0 leading-relaxed text-gray-600">
-						We connect **skilled professionals** with top companies to create **long-lasting careers** in the Philippines.
-						</p>
-						<div className="flex mt-10 md:mt-12 justify-center md:justify-start gap-4">
-							<button
-							 type="button"
-							 className="text-lg bg-amber-500 text-white font-semibold shadow-xl py-3 px-8 rounded-full hover:bg-amber-600 transition-colors transform hover:scale-105"
-							>
-							Find Jobs		
-							</button>
-							<button
-							 type="button"
-							 className="text-lg bg-emerald-600 text-white font-semibold shadow-xl py-3 px-8 rounded-full hover:bg-emerald-700 transition-colors transform hover:scale-105"
-							>
-							Hire Talents		
-							</button>
-						</div>
+					<div className="order-2 md:order-1 text-emerald-700 text-center md:text-left">
+					  <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold leading-tight mb-4">
+					    <span className="block text-shadow-lg">Finding Right Talent</span>
+					    <span className="block text-amber-500 mt-2 text-shadow-emboss">Build Your Future.</span>
+					  </h1>
+
+					  <p className="text-lg md:text-xl lg:text-2xl mt-6 md:mt-8 max-w-xl mx-auto md:mx-0 leading-relaxed text-gray-600">
+					    We connect <strong>skilled professionals</strong> with top companies to create <strong>long-lasting careers</strong> in the Philippines.
+					  </p>
+
+					  <div className="flex mt-10 md:mt-12 justify-center md:justify-start">
+					    <button
+					      type="button"
+					      onClick={handleFindJobs} // ✅ Now it triggers navigation and flag
+					      className="text-lg bg-amber-500 text-white font-semibold shadow-xl py-3 px-10 rounded-full hover:bg-amber-600 transition-all duration-200 hover:scale-105"
+					    >
+					      Find Jobs
+					    </button>
+					  </div>
 					</div>
+
                     {/* Image (Order 1 on mobile, 2 on desktop) */}
 					<div className="order-1 md:order-2 flex justify-center pt-8 md:pt-0">
 						<img src={HANDSHAKE_IMG} alt="Professional handshake" className="rounded-3xl shadow-2xl max-w-full h-auto object-cover" />
