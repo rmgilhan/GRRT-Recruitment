@@ -23,7 +23,7 @@ export default function UserTable({
   account,
 }: Props) {
 
-  console.log(account);
+  // console.log(account);
 
   const isAdmin = account.roles?.includes("Admin");
 

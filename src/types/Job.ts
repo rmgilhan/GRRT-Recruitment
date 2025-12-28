@@ -2,8 +2,11 @@ export interface Job {
   _id?: string;
   title: string;
   description: string;
-  requirements: string[];
+  requirements?: string[];
+  keyResponsibilities?: string[];
+  benefits?: string[];
   employmentType: string;
   location: string;
-  status: "Open" | "Closed";
+  status: string;
+  datePosted?: string;
 }

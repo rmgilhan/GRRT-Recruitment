@@ -2,15 +2,21 @@ import axios from "axios";
 import { useState, useContext } from "react";
 import Swal from "sweetalert2";
 import UserContext from "@context/UserContext";
-import * as UserTypes from "../types/user"; // ✅ cleaner import path
+import * as UserTypes from "../types/user";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+// ⭐ Updated to match backend model
 export interface Job {
   _id?: string;
   title: string;
   description: string;
-  requirements: string[];
+
+  // NEW FIELDS
+  keyResponsibilities?: string[];
+  requirements?: string[];
+  benefits?: string[];
+
   employmentType: string;
   location: string;
   status: string;
@@ -22,45 +28,49 @@ type UserContextType = UserTypes.UserContextType;
 
 export default function useJob() {
   const { user } = useContext(UserContext) as UserContextType;
+
   const [jobsData, setJobsData] = useState<Job[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const [results, setResults] = useState<any[]>([]);
+  const [error, setError] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   /**
    * 🧩 Add new Job (Admin only)
    */
   const entryJob = async (jobData: Job): Promise<void> => {
-  try {
-    if (!user?.id) {
-      Swal.fire("Unauthorized", "You must be logged in to post a job.", "warning");
-      return;
+    try {
+      if (!user?.id) {
+        Swal.fire("Unauthorized", "You must be logged in to post a job.", "warning");
+        return;
+      }
+
+      setLoading(true);
+
+      const response = await axios.post(`${API_URL}/jobs/createJob`, jobData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      const { feedback, message, job } = response.data;
+
+      if (feedback === "Success") {
+        setJobsData((prev) => [...prev, job]);
+        Swal.fire("Success", message || "Job posted successfully.", "success");
+      } else {
+        Swal.fire("Warning", message || "Something went wrong.", "warning");
+      }
+    } catch (error: any) {
+      console.error("Error posting job:", error.response?.data || error.message);
+      Swal.fire("Error", error.response?.data?.message || "Failed to post job.", "error");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(true);
-
-    const response = await axios.post(`${API_URL}/jobs/createJob`, jobData, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-
-    const { feedback, message, job } = response.data;
-
-    if (feedback === "Success") {
-      // Optionally add the new job to local state
-      setJobsData((prev) => [...prev, job]);
-      Swal.fire("Success", message || "Job has been successfully posted.", "success");
-    } else {
-      Swal.fire("Warning", message || "Something went wrong.", "warning");
-    }
-  } catch (error: any) {
-    console.error("Error posting job:", error.response?.data || error.message);
-    Swal.fire("Error", error.response?.data?.message || "Failed to post job.", "error");
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   /**
    * 📋 Fetch all Jobs
@@ -86,36 +96,37 @@ export default function useJob() {
   };
 
   /**
-   * Update Job
+   * ✏️ Update Job
    */
+  const updateJob = async (jobId: string, updatedData: Partial<Job>): Promise<void> => {
+    try {
+      const response = await axios.put(
+        `${API_URL}/jobs/${jobId}`,
+        updatedData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
-  const updateJob = async (jobId: string, updatedData: Partial<JobFormData>): Promise<void> => {
-	  try {
-	    const response = await axios.put(
-	      `${API_URL}/jobs/${jobId}`,
-	      updatedData, // ✅ send the data to update
-	      {
-	        headers: {
-	          Authorization: `Bearer ${localStorage.getItem("token")}`,
-	        },
-	      }
-	    );
+      // backend returns { message, jobUpdate }
+      const updatedJob = response.data.jobUpdate;
 
-	    // ✅ Update the job in local state
-	    setJobsData((prev) =>
-	      prev.map((job) => (job._id === jobId ? response.data : job))
-	    );
+      // Update state
+      setJobsData((prev) =>
+        prev.map((job) => (job._id === jobId ? updatedJob : job))
+      );
 
-	    Swal.fire("Updated", "Job has been updated.", "success");
-	  } catch (error: any) {
-	    console.error("Error updating job:", error.response?.data || error.message);
-	    Swal.fire("Error", "Failed to update job.", "error");
-	  }
-	};
-
+      Swal.fire("Updated", "Job has been updated.", "success");
+    } catch (error: any) {
+      console.error("Error updating job:", error.response?.data || error.message);
+      Swal.fire("Error", "Failed to update job.", "error");
+    }
+  };
 
   /**
-   * 🗑️ Delete Job
+   * 🗑 Delete Job
    */
   const deleteJob = async (jobId: string): Promise<void> => {
     try {
@@ -144,6 +155,93 @@ export default function useJob() {
     }
   };
 
+  /**
+   * 🔍 LinkedIn-like Search
+   */
+  const linkedlnSearch = async (
+    q: string,
+    page = 1,
+    perPage = 10,
+    position?: string,
+    location?: string
+  ) => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setError("Unauthorized. Please log in.");
+      setResults([]);
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await axios.get(`${API_URL}/jobs/search`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          q,
+          page,
+          perPage,
+          ...(position && { position }),
+          ...(location && { location }),
+        },
+      });
+
+      setResults(response.data.results || []);
+      setTotalPages(response.data.totalPages || 1);
+      setCurrentPage(response.data.page || 1);
+
+      return response.data.cached;
+    } catch (err: any) {
+      setError(err.response?.data?.message || err.message || "Unknown error");
+      setResults([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /**
+   * 📨 Apply for a Job
+   */
+ const applyJob = async (formData: FormData) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/applications/apply`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    if (response.status === 201 && response.data.success) {
+      return Swal.fire({
+        icon: "success",
+        title: "Application Submitted",
+        text: "Your application has been sent successfully.",
+        confirmButtonText: "OK",
+      });
+    }
+
+    return Swal.fire({
+      icon: "warning",
+      title: "Submission Failed",
+      text: response.data.message || "Unable to submit application.",
+    });
+  } catch (error: any) {
+    return Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: error.response?.data?.message || "Something went wrong.",
+    });
+  }
+};
+
+
   return {
     user,
     jobsData,
@@ -152,5 +250,15 @@ export default function useJob() {
     entryJob,
     updateJob,
     deleteJob,
+    results,
+    currentPage,
+    totalPages,
+    error,
+    linkedlnSearch,
+    setCurrentPage,
+    setTotalPages,
+    setResults,
+    setError,
+    applyJob, // ✅ added method
   };
 }

@@ -30,7 +30,9 @@
       "@context/*": ["context/*"],
       "@hooks/*": ["hooks/*"],
       "@utils/*": ["utils/*"],
-      "@config/*": ["config/*"]
+      "@lib/*": ["lib/*"],
+      "@config/*": ["config/*"],
+      "@interfaces/*": ["interfaces/*"],
     }
   },
   "include": ["src", "src/types"]
