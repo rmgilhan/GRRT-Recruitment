@@ -9,7 +9,7 @@ export default function Services() {
   return (
     <div className="bg-white text-gray-800">
       {/* Hero Section */}
-      <section  className="relative h-[70vh] flex items-center justify-center text-center text-white"
+      <section id="_top" className="relative h-[70vh] flex items-center justify-center text-center text-white"
           style={{
             backgroundImage: `url(${OurServices})`,
             backgroundSize: "cover",
@@ -36,9 +36,9 @@ export default function Services() {
         </div>
       </section>
 
-      <div id="services" className="container mx-auto px-6 py-16 space-y-16">
+      <div id="services" className="container mx-auto px-6 py-16 pt-20">
         {/* Business Consultancy */}
-        <section>
+        <section id="BusinessConsultancy" className="pt-32 -mt-32 mb-16">
           <div className="flex items-center gap-3 mb-4">
             <Briefcase className="text-green-700 w-8 h-8" />
             <h2 className="text-2xl font-semibold text-green-700">
@@ -72,7 +72,7 @@ export default function Services() {
         </section>
 
         {/* Head Hunting */}
-        <section>
+        <section id="HeadHunting" className="pt-32 -mt-32 mb-16 pt-20">
           <div className="flex items-center gap-3 mb-4">
             <Users className="text-green-700 w-8 h-8" />
             <h2 className="text-2xl font-semibold text-green-700">
@@ -102,7 +102,7 @@ export default function Services() {
         </section>
 
         {/* Business Continuity */}
-        <section>
+        <section id="BusinessContinuity" className="pt-32 -mt-32 mb-16 pt-20">
           <div className="flex items-center gap-3 mb-4">
             <RefreshCw className="text-green-700 w-8 h-8" />
             <h2 className="text-2xl font-semibold text-green-700">

@@ -1,34 +1,21 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
-import { Briefcase, Users, RefreshCw } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+import { Briefcase, Users, RefreshCw, MapPin, Phone, Mail } from 'lucide-react';
+import { HashLink as HasLink } from 'react-router-hash-link';
 
-// External, responsive placeholder images and icon paths
-const PLACEHOLDER_IMG = 'https://placehold.co/600x400/10B981/ffffff?text=';
-const HANDSHAKE_IMG = `https://images.unsplash.com/photo-1758518729706-b1810dd39cc6?q=80&w=1331&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`;
+const HANDSHAKE_IMG = `https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1331&auto=format&fit=crop`;
+const STRENGTH_IMG = `https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1170&auto=format&fit=crop`;
+const ABOUT_IMG = `https://plus.unsplash.com/premium_photo-1658507041186-07e5948b4f69?q=80&w=1170&auto=format&fit=crop`;
 
-const STRENGTH_IMG = `https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`;
-const ABOUT_IMG = `https://plus.unsplash.com/premium_photo-1658507041186-07e5948b4f69?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`;
-
-/**
- * Main application component for the landing page.
- * Uses Tailwind CSS for styling and responsiveness.
- */
 const App = () => {
-    // Simple state for the contact form (for demonstration)
     const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [showJobs, setShowJobs] = useState(false);
-    
-    const navigate = useNavigate(); // ✅ Hook for routing
-  	
-  	 // ✅ Function to handle "Find Jobs" click
-  	const handleFindJobs = () => {
-    // Save a temporary flag (Navbar can check this)
-    localStorage.setItem("showJobsMenu", "true");
+    const navigate = useNavigate();
 
-    // Navigate to the Jobs page
-    navigate("/Jobs");
-  	};
+    const handleFindJobs = () => {
+        localStorage.setItem("showJobsMenu", "true");
+        navigate("/Jobs");
+    };
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -37,239 +24,224 @@ const App = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-        // Simulate form submission logic
-        console.log('Form Submitted:', formData);
-        
-        // In a real application, you would send data to a backend (like Firestore) here.
         setTimeout(() => {
             setIsSubmitting(false);
             setFormData({ name: '', email: '', subject: '', message: '' });
-            alert('Thank you for your message! We will be in touch shortly.');
+            alert('Thank you! We will be in touch shortly.');
         }, 1500);
     };
 
-    const ServiceCard = ({ icon: Icon, title, description }) => (
-        <div className="bg-white p-6 md:p-8 rounded-xl shadow-2xl hover:shadow-emerald-300 transition-shadow duration-300 transform hover:-translate-y-1 flex flex-col items-center text-center h-full">
-            <div className="bg-emerald-100 p-4 rounded-full mb-6">
-                <Icon className="w-8 h-8 text-emerald-600" />
+    // Updated Service Card for the Dark Section
+    const ServiceCard = ({ icon: Icon, title, description, linkTo }) => (
+        <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/10 hover:bg-white/20 transition-all duration-300 group flex flex-col h-full">
+            <div className="bg-amber-400/20 p-4 rounded-2xl w-fit mb-6 group-hover:scale-110 transition-transform">
+                <Icon className="w-8 h-8 text-amber-400" />
             </div>
-            <h3 className="text-2xl font-bold text-emerald-800 mb-4">{title}</h3>
-            <p className="text-gray-600 mb-6 flex-grow">{description}</p>
-            <button
-                type="button"
-                className="bg-emerald-600 shadow-lg text-white py-2 px-8 rounded-full mt-4 hover:bg-emerald-700 transition-colors text-sm font-semibold"
+            <h3 className="text-2xl font-bold text-white mb-4">{title}</h3>
+            <p className="text-emerald-50/70 mb-8 flex-grow leading-relaxed">{description}</p>
+            <HasLink
+                to={linkTo}
+                smooth
+                className="text-amber-400 font-bold flex items-center gap-2 hover:gap-4 transition-all"
             >
-                Learn More
-            </button>
+                Explore Service <span>→</span>
+            </HasLink>
         </div>
     );
 
-	return (
-		<main className="antialiased text-gray-800 bg-gray-50">
-            {/* Hero Section */}
-			<section className="max-w-7xl mx-auto py-12 md:py-20 px-4 md:px-8">
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-					{/* Text Content (Order 2 on mobile, 1 on desktop) */}
-					<div className="order-2 md:order-1 text-emerald-700 text-center md:text-left">
-					  <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold leading-tight mb-4">
-					    <span className="block text-shadow-lg">Finding Right Talent</span>
-					    <span className="block text-amber-500 mt-2 text-shadow-emboss">Build Your Future.</span>
-					  </h1>
+    return (
+        <main className="antialiased text-gray-800 bg-white">
+            {/* --- HERO SECTION --- */}
+            <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-amber-50 py-16 md:py-24 px-4 md:px-8">
+                {/* Decorative Elements */}
+                <div className="absolute top-0 -left-20 w-96 h-96 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
+                <div className="absolute bottom-0 -right-20 w-96 h-96 bg-amber-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
 
-					  <p className="text-lg md:text-xl lg:text-2xl mt-6 md:mt-8 max-w-xl mx-auto md:mx-0 leading-relaxed text-gray-600">
-					    We connect <strong>skilled professionals</strong> with top companies to create <strong>long-lasting careers</strong> in the Philippines.
-					  </p>
+                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10">
+                    <div className="text-center md:text-left">
+                        <span className="inline-block py-1.5 px-4 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold tracking-widest uppercase mb-6">
+                            Est. Recruitment Experts
+                        </span>
+                        <h1 className="text-5xl lg:text-7xl font-black leading-[1.1] text-emerald-900">
+                            Finding Right <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">Talent</span>
+                            <br />
+                            <span className="text-amber-500">Build Your Future.</span>
+                        </h1>
+                        <p className="text-lg md:text-xl mt-8 text-gray-600 leading-relaxed max-w-xl mx-auto md:mx-0">
+                            Connecting high-caliber professionals with industry leaders. We build the teams that power the Philippines' future.
+                        </p>
+                        <div className="flex flex-col sm:flex-row mt-10 gap-4 justify-center md:justify-start">
+                            <button onClick={handleFindJobs} className="px-10 py-4 bg-emerald-600 text-white font-bold rounded-full shadow-xl hover:bg-emerald-700 transition-all hover:scale-105 active:scale-95">
+                                Find Jobs
+                            </button>
+                            <HasLink to="/AboutUs" className="px-10 py-4 bg-white text-emerald-700 font-bold rounded-full border-2 border-emerald-100 hover:bg-emerald-50 transition-all shadow-sm">
+                                Our Solutions
+                            </HasLink>
+                        </div>
+                    </div>
 
-					  <div className="flex mt-10 md:mt-12 justify-center md:justify-start">
-					    <button
-					      type="button"
-					      onClick={handleFindJobs} // ✅ Now it triggers navigation and flag
-					      className="text-lg bg-amber-500 text-white font-semibold shadow-xl py-3 px-10 rounded-full hover:bg-amber-600 transition-all duration-200 hover:scale-105"
-					    >
-					      Find Jobs
-					    </button>
-					  </div>
-					</div>
-
-                    {/* Image (Order 1 on mobile, 2 on desktop) */}
-					<div className="order-1 md:order-2 flex justify-center pt-8 md:pt-0">
-						<img src={HANDSHAKE_IMG} alt="Professional handshake" className="rounded-3xl shadow-2xl max-w-full h-auto object-cover" />
-					</div>
-				</div>
-			</section>
-
-            {/* About / Who We Are Section */}
-			<section className="bg-amber-50 py-16 md:py-24 px-4 md:px-8">
-                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                    {/* Image (Order 1 on mobile, 2 on desktop) */}
-				    <div className="order-1 md:order-2 flex justify-center">
-					    <img src={ABOUT_IMG} alt="Our team collaborating" className="rounded-3xl shadow-2xl max-w-full h-auto object-cover" />
-				    </div>
-                    {/* Text Content (Order 2 on mobile, 1 on desktop) */}
-				    <div className="order-2 md:order-1 text-gray-700">
-						<h2 className="text-3xl md:text-5xl font-extrabold text-emerald-800 mb-6">About / Who We Are</h2>
-						<p className="text-lg leading-relaxed text-gray-600 mb-8">
-						At **GRRT Recruitment Services**, we transform recruitment in the Philippines. 
-						We provide tailored solutions, innovative strategies, and build meaningful, 
-						long-term relationships with clients, partners, and talent across various industries.
-						</p>
-						<Link
-						  to="AboutUs#Mission"
-						 className="bg-amber-500 text-white font-semibold shadow-xl py-3 px-8 rounded-full hover:bg-amber-600 transition-colors"
-						>
-							Discover Our Mission
-						</Link>
-				    </div>
-                </div>
-			</section>
-
-            {/* Services Section */}
-			<section className="max-w-7xl mx-auto py-16 md:py-24 px-4 md:px-8 text-emerald-700">
-				<h2 className="text-3xl md:text-5xl font-extrabold text-center mb-12 md:mb-16 text-emerald-800">Our Services</h2>
-				
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-					<ServiceCard
-                        icon={Briefcase}
-                        title="Business Consultancy"
-                        description="Smart solutions to help you start and grow your business—even on a limited budget. We guide your strategic path to success."
-                    />
-                    <ServiceCard
-                        icon={Users}
-                        title="Head Hunting"
-                        description="Connecting you with top local and global talent to build your dream team. We find the perfect match for your specialized needs."
-                    />
-                    <ServiceCard
-                        icon={RefreshCw}
-                        title="Business Continuity"
-                        description="Keeping your business running smoothly and resilient in uncertain times. We ensure stability and operational excellence through careful planning."
-                    />
-				</div>
-			</section>
-
-            {/* Our Strength & Team Section */}
-			<section className="bg-white py-16 md:py-24 px-4 md:px-8 border-t border-gray-200">
-                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                    {/* Text Content (Order 2 on mobile, 1 on desktop) */}
-                    <div className="order-2 md:order-1 text-gray-700">
-						<h2 className="text-3xl md:text-5xl font-extrabold text-emerald-800 mb-8">Our Strength</h2>
-						<p className="text-lg leading-relaxed text-gray-600 mb-10">
-						We combine **global best practices**, deep industry knowledge, and a flexible 
-						service model to deliver recruitment solutions that truly fit our clients’ needs.
-						Our commitment to continuous improvement ensures top performers, 
-						innovative thinkers, and exceptional results.
-						</p>
-						
-                        <h2 className="text-3xl md:text-5xl font-extrabold text-emerald-800 mb-8 mt-12">Our Team</h2>
-						<p className="text-lg leading-relaxed text-gray-600 mb-10">
-						Our dedicated team bridges the gap between skilled professionals and leading 
-						companies. With **focus, clear communication, accountability, and respect for 
-						diversity**, we deliver recruitment solutions that make a real impact.
-						</p>
-						<Link
-							to="/AboutUs#Strength"
-							className="bg-emerald-600 text-white font-semibold shadow-xl py-3 px-8 rounded-full hover:bg-emerald-700 transition-colors"
-						>
-							Meet The Experts
-						</Link>
-				    </div>
-                    {/* Image (Order 1 on mobile, 2 on desktop) */}
-                    <div className="order-1 md:order-2 flex justify-center">
-                        <img src={STRENGTH_IMG} alt="Team collaboration" className="rounded-3xl shadow-2xl max-w-full h-auto object-cover" /> 	
+                    <div className="flex justify-center relative">
+                        <div className="absolute -inset-6 bg-gradient-to-tr from-emerald-400 to-amber-400 rounded-[3rem] blur-2xl opacity-20"></div>
+                        <img 
+                            src={HANDSHAKE_IMG} 
+                            alt="Professional Handshake" 
+                            className="relative rounded-[2.5rem] shadow-2xl max-h-[480px] w-full object-cover border-[12px] border-white" 
+                        />
                     </div>
                 </div>
-			</section>
+            </section>
 
-            {/* Contact & Footer Section */}
-			<footer className="bg-gray-800 text-white py-16 md:py-20 px-4 md:px-8">
-                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
-			        {/* Column 1 - Visit Us & Map */}
-			        <div className="inter">
-			        	<h3 className="text-2xl font-bold mb-4 border-b border-emerald-600 pb-2">Visit Us</h3>
-			        	<h4 className="text-lg font-medium text-emerald-400 mt-6">Office Address</h4>
-			        	<p className="text-gray-300 mt-2 leading-relaxed">
-			        	Unit C, 2/F, Burke House Bldg. 2439 Pedro Gil St., Sta. Ana, Manila, Philippines, 1009
-			        	</p>
-			        	<h4 className="text-lg font-medium text-emerald-400 pt-6">Office Hours</h4>
-			        	<p className="text-gray-300 mt-2">
-			        	Mon-Fri - 9:00 AM - 6:00 PM
-			        	</p>
-			        	<iframe
-			        	  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3710.46894886174!2d121.00992497492363!3d14.581915585902168!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c9c13aff0a45%3A0x372eb70b1bb41225!2sBurke%20House%20No.%205%20Building!5e1!3m2!1sen!2sph!4v1758929716417!5m2!1sen!2sph"
-			        	  width="100%"
-			        	  height="200"
-			        	  style={{ border: 0 }}
-			        	  allowFullScreen=""
-			        	  loading="lazy"
-			        	  referrerPolicy="no-referrer-when-downgrade"
-			        	  className="mt-6 rounded-lg shadow-xl"
-			        	></iframe>
-			        </div>
-
-			        {/* Column 2 - Contact Us */}
-			        <div className="inter">
-			        	<h3 className="text-2xl font-bold mb-4 border-b border-emerald-600 pb-2">Contact Us</h3>
-			        	<h4 className="text-lg font-medium text-emerald-400 mt-6">Phone</h4>
-			        	<p className="text-gray-300 mt-2">(+63) 02-8756-7656</p>
-			        	<p className="text-gray-300 mb-4">(+63) 02-8425-3262</p>
-			        	<h4 className="text-lg font-medium text-emerald-400 pt-2">Mobile</h4>
-			        	<p className="text-gray-300 mt-2">0921-583-8157</p>
-			        </div>
-
-			        {/* Column 3 - Tell Us Form */}
-			        <div className="inter">
-			        	<h3 className="text-2xl font-bold mb-4 border-b border-emerald-600 pb-2">Send Us a Message</h3>
-			        	<form onSubmit={handleSubmit} className="flex flex-col gap-4 bg-gray-700 p-6 rounded-xl shadow-2xl">
-			        	 	<input
-			        	 	 	type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                required
-			        	 		placeholder="Your Name"
-			        	 		className="border-gray-600 bg-gray-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500"
-			        	 	/>
-			        	 	<input
-			        	 	 	type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                required
-			        	 		placeholder="Your Email"
-			        	 		className="border-gray-600 bg-gray-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500"
-			        	 	/>
-			        	 	<input
-			        	 	 	type="text"
-                                name="subject"
-                                value={formData.subject}
-                                onChange={handleChange}
-                                required
-			        	 		placeholder="Subject"
-			        	 		className="border-gray-600 bg-gray-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500"
-			        	 	/>
-			        	 	<textarea
-			        	 	 	rows={4}
-                                name="message"
-                                value={formData.message}
-                                onChange={handleChange}
-                                required
-			        	 		placeholder="Your message..."
-			        	 		className="border-gray-600 bg-gray-600 text-white rounded-lg px-4 py-3 resize-none focus:outline-none focus:ring-2 focus:ring-amber-500"
-			        	 	></textarea>
-
-			        	 	<button
-			        	 	 	type="submit"
-			        	 	 	className={`mt-2 py-3 px-4 rounded-full font-bold transition-colors ${isSubmitting ? 'bg-gray-500 cursor-not-allowed' : 'bg-amber-500 hover:bg-amber-600'}`}
-                                disabled={isSubmitting}
-			        	 	>
-			        	 	 	{isSubmitting ? 'Sending...' : 'Send Message'}
-			        	 	</button>
-			        	</form>
-			        </div>
+            {/* --- ABOUT SECTION --- */}
+            <section id="OurTeam" className="py-20 lg:py-32 px-4 md:px-8 bg-white">
+                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                    <div className="relative">
+                        <img src={ABOUT_IMG} alt="Teamwork" className="rounded-3xl shadow-2xl h-[450px] w-full object-cover" />
+                        <div className="absolute -bottom-6 -right-6 bg-amber-500 p-8 rounded-2xl shadow-xl hidden lg:block">
+                            <p className="text-white font-black text-4xl">10+</p>
+                            <p className="text-amber-100 text-sm font-bold uppercase tracking-tighter">Years of Excellence</p>
+                        </div>
+                    </div>
+                    <div className="space-y-8">
+                        <div>
+                            <h2 className="text-4xl md:text-5xl font-black text-emerald-900 mb-4">Who We Are</h2>
+                            <div className="h-2 w-20 bg-amber-500 rounded-full"></div>
+                        </div>
+                        <p className="text-xl text-gray-700 leading-relaxed font-medium">
+                            At GRRT Recruitment Services, we don't just find employees—we source the DNA of your company's future success.
+                        </p>
+                        <p className="text-lg text-gray-600 leading-relaxed">
+                            Based in Manila, we provide tailored recruitment strategies and business consultancy that bridge the gap between global best practices and local market expertise.
+                        </p>
+                        <HasLink to="/AboutUs#Mission" className="inline-flex items-center gap-3 bg-emerald-50 text-emerald-700 px-6 py-3 rounded-xl font-bold hover:bg-emerald-100 transition-colors">
+                            Discover Our Mission <span>→</span>
+                        </HasLink>
+                    </div>
                 </div>
-                
-			</footer>
-		</main>
-	);
+            </section>
+
+            {/* --- SERVICES SECTION --- */}
+            <section className="bg-emerald-950 py-24 px-4 md:px-8 text-white relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+                <div className="max-w-7xl mx-auto relative z-10">
+                    <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 text-center md:text-left">
+                        <div className="max-w-2xl">
+                            <h2 className="text-4xl md:text-5xl font-black mb-6">Our Core Services</h2>
+                            <p className="text-emerald-100/60 text-lg leading-relaxed">
+                                From executive headhunting to operational continuity, we offer a full suite of business growth tools.
+                            </p>
+                        </div>
+                        <HasLink to="/Services#_top" className="px-8 py-3 border border-white/20 rounded-full hover:bg-white/10 transition-all font-bold">
+                            View All Services
+                        </HasLink>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <ServiceCard 
+                            icon={Briefcase} 
+                            title="Business Consultancy" 
+                            description="Strategic solutions for startups and growing enterprises to navigate complex market terrains."
+                            linkTo="/Services#BusinessConsultancy"
+                        />
+                        <ServiceCard 
+                            icon={Users} 
+                            title="Head Hunting" 
+                            description="Deep-search recruitment for specialized roles and executive leadership that drives innovation."
+                            linkTo="/Services#HeadHunting"
+                        />
+                        <ServiceCard 
+                            icon={RefreshCw} 
+                            title="Business Continuity" 
+                            description="Robust planning and risk management to ensure your operations never miss a beat."
+                            linkTo="/Services#BusinessContinuity"
+                        />
+                    </div>
+                </div>
+            </section>
+
+            {/* --- STRENGTH SECTION --- */}
+            <section className="py-20 lg:py-32 px-4 md:px-8 bg-amber-50">
+                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                    <div className="order-2 md:order-1 space-y-10">
+                        <div>
+                            <h2 className="text-4xl font-black text-emerald-900 mb-6">Our Strength</h2>
+                            <p className="text-lg text-gray-700 leading-relaxed">
+                                We combine global recruitment standards with a deep understanding of the Filipino workforce. Our methodology is data-driven yet human-centric.
+                            </p>
+                        </div>
+                        <div>
+                            <h2 className="text-4xl font-black text-emerald-900 mb-6">Our Team</h2>
+                            <p className="text-lg text-gray-700 leading-relaxed">
+                                A collective of industry veterans, talent scouts, and strategic advisors dedicated to one goal: Your Growth.
+                            </p>
+                        </div>
+                        <HasLink to="/AboutUs#Strength" className="px-10 py-4 bg-emerald-600 text-white font-bold rounded-full hover:bg-emerald-700 shadow-lg inline-block">
+                            Meet The Experts
+                        </HasLink>
+                    </div>
+                    <div className="order-1 md:order-2">
+                        <img src={STRENGTH_IMG} alt="Collaboration" className="rounded-[3rem] shadow-2xl h-[500px] w-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+                    </div>
+                </div>
+            </section>
+
+            {/* --- FOOTER --- */}
+            {/*<footer className="bg-gray-900 text-gray-400 py-20 px-4 md:px-8 border-t border-gray-800">
+                <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-16">
+                    <div className="space-y-6">
+                        <h2 className="text-3xl font-black text-white">GRRT</h2>
+                        <p className="text-sm leading-relaxed italic">"Excellence in every placement, integrity in every partnership."</p>
+                        <div className="flex gap-4">
+                            <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-emerald-600 transition-colors cursor-pointer text-white">FB</div>
+                            <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-emerald-600 transition-colors cursor-pointer text-white">LN</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 className="text-white font-bold uppercase tracking-widest text-xs mb-8">Quick Links</h3>
+                        <ul className="space-y-4 text-sm">
+                            <li><HasLink to="/#top" className="hover:text-emerald-400 transition-colors">Home</HasLink></li>
+                            <li><HasLink to="/AboutUs#_top" className="hover:text-emerald-400 transition-colors">About Us</HasLink></li>
+                            <li><HasLink to="/Services#_top" className="hover:text-emerald-400 transition-colors">Our Services</HasLink></li>
+                            <li><HasLink to="/Jobs" className="hover:text-emerald-400 transition-colors">Career Portal</HasLink></li>
+                        </ul>
+                    </div>
+
+                    <div className="space-y-6 text-sm">
+                        <h3 className="text-white font-bold uppercase tracking-widest text-xs mb-2">Reach Us</h3>
+                        <div className="flex items-start gap-4">
+                            <MapPin className="w-5 h-5 text-emerald-500 shrink-0" />
+                            <p>Unit C, 2/F, Burke House Bldg. 2439 Pedro Gil St., Sta. Ana, Manila</p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <Phone className="w-5 h-5 text-emerald-500 shrink-0" />
+                            <p>(+63) 02-8756-7656</p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <Mail className="w-5 h-5 text-emerald-500 shrink-0" />
+                            <p>contact@grrt-services.ph</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div className="bg-gray-800 p-8 rounded-3xl border border-gray-700">
+                            <h3 className="text-white font-bold mb-6">Send an Inquiry</h3>
+                            <form onSubmit={handleSubmit} className="space-y-4">
+                                <input type="text" name="name" onChange={handleChange} value={formData.name} placeholder="Name" className="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm focus:border-emerald-500 outline-none transition-all" required />
+                                <input type="email" name="email" onChange={handleChange} value={formData.email} placeholder="Email" className="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm focus:border-emerald-500 outline-none transition-all" required />
+                                <textarea name="message" onChange={handleChange} value={formData.message} placeholder="How can we help?" className="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm h-24 outline-none focus:border-emerald-500 transition-all" required />
+                                <button type="submit" disabled={isSubmitting} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-all">
+                                    {isSubmitting ? 'Sending...' : 'Send Message'}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-gray-800 text-center text-xs uppercase tracking-widest text-gray-600">
+                    &copy; 2026 GRRT Recruitment Services. All Rights Reserved.
+                </div>
+            </footer>*/}
+        </main>
+    );
 };
 
 export default App;

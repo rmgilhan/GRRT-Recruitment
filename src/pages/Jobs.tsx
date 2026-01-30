@@ -20,8 +20,12 @@ const Jobs: React.FC = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/api/jobs"); // 👈 your backend endpoint
+        const res = await axios.get("http://localhost:4000/api/jobs");
         setJobs(res.data.jobPosted);
+        
+        // ✅ Add this here: Force scroll to top after data is loaded and rendered
+        window.scrollTo(0, 0); 
+        
       } catch (err) {
         console.error("Error fetching jobs:", err);
       } finally {
@@ -36,7 +40,7 @@ const Jobs: React.FC = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto py-10">
+    <div id="_top" className="max-w-5xl mx-auto py-10">
       <h1 className="text-3xl font-bold text-center mb-10 text-emerald-700">
         Available Job Openings
       </h1>

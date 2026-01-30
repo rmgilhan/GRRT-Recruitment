@@ -219,7 +219,7 @@ export default function useJob() {
     );
 
     if (response.status === 201 && response.data.success) {
-      return Swal.fire({
+      return await Swal.fire({
         icon: "success",
         title: "Application Submitted",
         text: "Your application has been sent successfully.",
@@ -227,20 +227,35 @@ export default function useJob() {
       });
     }
 
-    return Swal.fire({
+    return await Swal.fire({
       icon: "warning",
       title: "Submission Failed",
       text: response.data.message || "Unable to submit application.",
     });
   } catch (error: any) {
-    return Swal.fire({
+    return await Swal.fire({
       icon: "error",
       title: "Error",
       text: error.response?.data?.message || "Something went wrong.",
     });
   }
 };
-
+// Inside your hook file
+const sendInquiry = async (inquiryData: { name: string; email: string; message: string }) => {
+  console.log(inquiryData);
+  
+  try {
+    const response = await axios.post(
+    `${API_URL}/inquiries`, inquiryData);
+    if (response.status === 200 || response.status === 201) {
+      // You can use SweetAlert2 here like your applyJob does
+      return { success: true };
+    }
+  } catch (err) {
+    console.error("Inquiry error:", err);
+    return { success: false };
+  }
+};
 
   return {
     user,
@@ -260,5 +275,6 @@ export default function useJob() {
     setResults,
     setError,
     applyJob, // ✅ added method
+    sendInquiry,
   };
 }

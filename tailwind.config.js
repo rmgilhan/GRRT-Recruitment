@@ -1,4 +1,5 @@
 import colors from 'tailwindcss/colors'
+const plugin = require('tailwindcss/plugin')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -8,19 +9,37 @@ module.exports = {
   ],
   theme: {
     extend: {
+       backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'hero-pattern': "url('https://www.transparenttextures.com/patterns/cubes.png')",
+      },
+      animation: {
+        'float': 'floating 3s ease-in-out infinite',
+      },
+      keyframes: {
+        floating: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        }
+      },
+      // 1. ADDED CUSTOM SCREEN HEIGHT BREAKPOINT
+      screens: {
+        // Targets laptops like 1366x768 specifically
+        'short': { 'raw': '(min-width: 1024px) and (max-height: 800px)' },
+      },
       fontFamily: {
         inter: ['Inter', 'sans-serif'],
         openSans: ['Open Sans', 'sans-serif'],
         montserrat: ['Montserrat', 'sans-serif']
       },
+      // 2. TEXT SHADOW (Handled via plugin below)
       textShadow: {
         sm: '1px 1px 2px rgba(0,0,0,0.25)',
         md: '2px 2px 4px rgba(0,0,0,0.3)',
         lg: '3px 3px 6px rgba(0,0,0,0.35)',
-        emboss: '1px 1px 0 #ccc, -1px -1px 0 #fff', // 👈 embossed effect
+        emboss: '1px 1px 0 #ccc, -1px -1px 0 #fff',
       },
       fontSize: {
-        // Modular Scale: Major Third (1.25)
         'step-0': ['clamp(1rem, 2vw, 1.125rem)', { lineHeight: '1.5' }],
         'step-1': ['clamp(1.25rem, 3vw, 1.563rem)', { lineHeight: '1.45' }],
         'step-2': ['clamp(1.563rem, 4vw, 1.953rem)', { lineHeight: '1.35' }],
@@ -36,21 +55,6 @@ module.exports = {
         'step-4': 'clamp(2rem, 4vw, 3rem)',
         'step-5': 'clamp(3rem, 6vw, 4rem)',
         'step-6': 'clamp(4rem, 8vw, 6rem)',
-      },
-      lineHeight: {
-        tight: '1.15',
-        snug: '1.25',
-        normal: '1.45',
-        relaxed: '1.65',
-      },
-      maxWidth: {
-        'step-0': '20rem',
-        'step-1': '30rem',
-        'step-2': '40rem',
-        'step-3': '48rem',
-        'step-4': '60rem',
-        'step-5': '72rem',
-        'step-6': '80rem',
       },
       colors: {
         primary: colors.indigo,
@@ -83,5 +87,13 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addUtilities, theme }) {
+      const textShadow = theme('textShadow')
+      const shadowUtilities = Object.keys(textShadow).map(key => ({
+        [`.text-shadow-${key}`]: { textShadow: textShadow[key] },
+      }))
+      addUtilities(shadowUtilities)
+    }),
+  ],
 }

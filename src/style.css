@@ -12,9 +12,18 @@
     @apply font-openSans;
   }
 }
+html{
+  scroll-behavior: smooth;
+}
 
 body{
   background-color: #B4C0B6;
+}
+
+/* This tells the browser: "When someone jumps to an ID, 
+   leave 100px of space at the top so the Navbar doesn't cover it" */
+section[id], div[id] {
+  scroll-margin-top: 100px;
 }
 
 .text-shadow-lg {

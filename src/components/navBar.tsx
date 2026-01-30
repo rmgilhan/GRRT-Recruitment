@@ -14,7 +14,7 @@ import {
   X,
   UserPlus,
 } from "lucide-react";
-import LOGO_URL from "../assets/grrt-logo.png";
+import LOGO_URL from "../assets/grrt-logo-removebg.png";
 
 interface NavItem {
   to: string;
@@ -29,6 +29,8 @@ const NavBar: React.FC = ({ onLogoClick }: any) => {
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  const isAdminLoginPage = location.pathname === "/adminLogin";
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -67,7 +69,7 @@ useEffect(() => {
     navItems = [
       { to: "/", icon: Home, label: "Dashboard" },
       { to: "/Jobs", icon: Briefcase, label: "Jobs" },
-      { to: "/Candidates", icon: Layers, label: "Candidates" },
+      // { to: "/Candidates", icon: Layers, label: "Candidates" },
       { to: "/Users", icon: UserPlus, label: "Users" },
     ];
   } else {
@@ -83,19 +85,20 @@ useEffect(() => {
   return (
     <>
       <div className="font-sans">
-        {/* ✅ Desktop Navbar */}
-        <header className="hidden md:flex fixed top-0 inset-x-0 w-full z-30 justify-center">
-          <div className="w-full max-w-7xl h-20 bg-white rounded-xl shadow-xl flex items-center justify-between px-8 border border-gray-100">
-            {/* Logo */}
+        {/* ✅ Desktop Navbar - Floating & Glassmorphism */}
+        <header className="hidden md:flex fixed top-4 inset-x-0 w-full z-50 justify-center px-4">
+          <div className="w-full max-w-7xl h-20 bg-white/80 backdrop-blur-lg rounded-2xl shadow-[0_8px_32px_0_rgba(16,185,129,0.1)] flex items-center justify-between px-8 border border-white/20">
+            
+            {/* Logo with Hover Scale */}
             <div
-              className="flex items-center gap-2 cursor-pointer"
+              className="flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform duration-300"
               onClick={() => handleNavigation("/")}
             >
-              <img src={LOGO_URL} alt="GRRT Logo" className="w-36 h-auto" />
+              <img src={LOGO_URL} alt="GRRT Logo" className="w-32 lg:w-40 h-auto" />
             </div>
 
             {/* Navigation Links */}
-            <nav className="flex flex-row items-center gap-8 text-base md:text-lg font-medium h-full">
+            <nav className="flex flex-row items-center gap-2 lg:gap-6 font-semibold">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.to);
@@ -103,121 +106,129 @@ useEffect(() => {
                   <Link
                     key={item.to}
                     to={item.to}
-                    className={`flex items-center gap-2 py-2 px-4 rounded-lg transition-all duration-200 ${
+                    className={`flex items-center gap-2 py-2.5 px-5 rounded-xl transition-all duration-300 group ${
                       active
-                        ? "bg-emerald-100 text-emerald-700 font-bold shadow-sm"
-                        : "text-gray-600 hover:bg-gray-50 hover:text-emerald-500"
+                        ? "bg-emerald-600 text-white shadow-lg shadow-emerald-200"
+                        : "text-gray-600 hover:bg-emerald-50 hover:text-emerald-600"
                     }`}
                   >
-                    <Icon className="w-4 h-4" />
-                    {item.label}
+                    <Icon className={`w-4 h-4 ${active ? "animate-pulse" : "group-hover:scale-110"}`} />
+                    <span className="text-sm lg:text-base">{item.label}</span>
                   </Link>
                 );
               })}
             </nav>
 
-            {/* ✅ Login / Logout */}
-            {user?.id ? (
-              <button
-                type="button"
-                onClick={async () => {
-                await unsetUser();
-                setShowLogin(false);
-                Swal.fire({
-                  title: "Logged Out",
-                  text: "You’ve been successfully logged out.",
-                  icon: "info",
-                });
-              }}
-                className="ml-6 bg-red-500 text-white font-semibold text-sm py-2 px-6 rounded-full shadow-md transition-all duration-300 hover:bg-red-600 hover:shadow-lg"
-              >
-                Logout
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setShowLogin(true)}
-                className="ml-6 bg-emerald-500 text-white font-semibold text-sm py-2 px-6 rounded-full shadow-md transition-all duration-300 hover:bg-emerald-600 hover:shadow-lg"
-              >
-                Login
-              </button>
-            )}
+            {/* ✅ Login / Logout - High Contrast Action */}
+            <div className="flex items-center">
+              {user?.id ? (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await unsetUser();
+                    setShowLogin(false);
+                    Swal.fire({
+                      title: "Logged Out",
+                      text: "See you again soon!",
+                      icon: "info",
+                      confirmButtonColor: "#10b981"
+                    });
+                  }}
+                  className="bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm py-2.5 px-8 rounded-full shadow-lg transition-all hover:-translate-y-0.5"
+                >
+                  Logout
+                </button>
+              ) : (
+                isAdminLoginPage && (
+                  <button
+                    type="button"
+                    onClick={() => setShowLogin(true)}
+                    className="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white font-bold text-sm py-2.5 px-8 rounded-full shadow-lg shadow-emerald-200 transition-all hover:-translate-y-0.5 active:scale-95"
+                  >
+                    Login
+                  </button>
+                )
+              )}
+            </div>
+
           </div>
         </header>
 
-        {/* ✅ Mobile Navbar */}
-        <div className="md:hidden fixed top-0 left-0 right-0 flex items-center justify-between bg-white border-b px-4 py-3 shadow-md z-30">
-          <div className="flex items-center gap-2">
-            <img
-              src={LOGO_URL}
-              alt="GRRT Logo"
-              className="w-28 cursor-pointer"
-              onClick={() => handleNavigation("/")}
-            />
-          </div>
-
+        {/* ✅ Mobile Navbar - Clean & Integrated */}
+        <div className="md:hidden fixed top-0 left-0 right-0 flex items-center justify-between bg-white/90 backdrop-blur-md px-6 py-4 border-b border-gray-100 shadow-sm z-50">
+          <img
+            src={LOGO_URL}
+            alt="GRRT Logo"
+            className="w-28 cursor-pointer"
+            onClick={() => handleNavigation("/")}
+          />
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={`text-2xl text-emerald-600 bg-white rounded-lg p-2 transition-all focus:outline-none 
-              border-2 ${isOpen ? "border-emerald-500" : "border-gray-200 hover:border-emerald-400"}`}
+            className="text-emerald-600 p-2 rounded-xl bg-emerald-50 border border-emerald-100 transition-all"
           >
-            {isOpen ? <X /> : <Menu />}
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
-        {/* ✅ Mobile Menu Items */}
-        {isOpen && (
-          <div className="md:hidden fixed top-[60px] left-0 w-full max-w-xs bg-white border-r shadow-xl h-[calc(100vh-60px)] z-40 p-4 flex flex-col transition-transform duration-300">
-            <nav className="flex flex-col gap-2 font-medium text-lg">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                const active = isActive(item.to);
-                return (
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    onClick={() => setIsOpen(false)}
-                    className={`flex items-center w-full gap-4 px-4 py-3 rounded-lg transition-all ${
-                      active
-                        ? "bg-emerald-500 text-white font-bold shadow-md"
-                        : "text-gray-700 hover:bg-emerald-50 hover:text-emerald-700"
-                    }`}
-                  >
-                    <Icon className="w-5 h-5" />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
-            </nav>
+        {/* ✅ Mobile Menu Sidebar - Animated Overlay */}
+        <div 
+          className={`md:hidden fixed inset-0 z-40 transition-visibility duration-300 ${isOpen ? "visible" : "invisible"}`}
+        >
+          {/* Dark Backdrop */}
+          <div 
+            className={`absolute inset-0 bg-emerald-950/20 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0"}`}
+            onClick={() => setIsOpen(false)}
+          />
+          
+          {/* Sidebar */}
+          <div className={`absolute top-0 left-0 w-72 h-full bg-white shadow-2xl transition-transform duration-300 transform ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
+            <div className="p-8 flex flex-col h-full">
+              <div className="mb-10">
+                 <img src={LOGO_URL} alt="Logo" className="w-32" />
+              </div>
 
-            {/* ✅ Mobile Login / Logout */}
-            {user?.id ? (
-              <button
-                type="button"
-                onClick={() => {
-                  unsetUser();
-                  setShowLogin(false);
-                  Swal.fire({
-                    title: "Logged Out",
-                    text: "You’ve been successfully logged out.",
-                    icon: "info",
-                  });
-                }}
-                className="mt-4 bg-red-500 text-white font-semibold text-sm py-2 px-6 rounded-full shadow-md transition-all duration-300 hover:bg-red-600 hover:shadow-lg"
-              >
-                Logout
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setShowLogin(true)}
-                className="mt-4 bg-emerald-500 text-white font-semibold text-sm py-2 px-6 rounded-full shadow-md transition-all duration-300 hover:bg-emerald-600 hover:shadow-lg"
-              >
-                Login
-              </button>
-            )}
+              <nav className="flex flex-col gap-3 flex-grow">
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  const active = isActive(item.to);
+                  return (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      onClick={() => setIsOpen(false)}
+                      className={`flex items-center gap-4 px-5 py-4 rounded-2xl transition-all ${
+                        active
+                          ? "bg-emerald-600 text-white shadow-lg shadow-emerald-100"
+                          : "text-gray-700 hover:bg-emerald-50"
+                      }`}
+                    >
+                      <Icon size={20} />
+                      <span className="font-bold">{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
+
+              <div className="pt-6 border-t border-gray-100">
+                 {user?.id ? (
+                  <button
+                    onClick={() => { unsetUser(); setIsOpen(false); }}
+                    className="w-full bg-rose-500 text-white font-bold py-4 rounded-2xl shadow-md"
+                  >
+                    Logout
+                  </button>
+                 ) : (
+                  <button
+                    onClick={() => { setShowLogin(true); setIsOpen(false); }}
+                    className="w-full bg-emerald-600 text-white font-bold py-4 rounded-2xl shadow-md"
+                  >
+                    Login
+                  </button>
+                 )}
+              </div>
+            </div>
           </div>
-        )}
+        </div>
       </div>
 
       {/* ✅ Login Modal */}

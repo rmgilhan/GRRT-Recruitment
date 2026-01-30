@@ -4,7 +4,7 @@ import About from '../assets/AboutUs.jpg'
 
 const GLOBEHAND_IMG = `https://static.wixstatic.com/media/11062b_e2b580dab01e420aa08572ba02916d7f~mv2_d_5580_4160_s_4_2.jpg/v1/fill/w_1225,h_616,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/11062b_e2b580dab01e420aa08572ba02916d7f~mv2_d_5580_4160_s_4_2.jpg`;
 const COREVALUES_IMG=`https://static.wixstatic.com/media/9139dbe3848c4b339ac0763787936575.jpg/v1/fill/w_1225,h_616,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/9139dbe3848c4b339ac0763787936575.jpg`;
-const MISSION_IMG=`https://static.wixstatic.com/media/2479ac233f0c4152af5805d671706fac.jpg/v1/fill/w_1225,h_616,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/2479ac233f0c4152af5805d671706fac.jpg;`
+const MISSION_IMG=`https://static.wixstatic.com/media/2479ac233f0c4152af5805d671706fac.jpg/v1/fill/w_1225,h_616,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/2479ac233f0c4152af5805d671706fac.jpg`
 
 export default function AboutUs() {
   return (
@@ -18,7 +18,7 @@ export default function AboutUs() {
           backgroundPosition: "bottom",
         }}
       >
-        <div className="absolute inset-0 bg-black/50" />
+        <div id="_top" className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 max-w-3xl">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             About GRRT Recruitment Services
@@ -45,8 +45,8 @@ export default function AboutUs() {
       </section>
 
       {/* Our Strengths */}
-      <section className="py-16 bg-gray-50 px-6 md:px-12 lg:px-24">
-        <div id="Strength" className="max-w-6xl mx-auto">
+      <section id="Strength" className="py-24 bg-gray-50 px-6 md:px-12 lg:px-24">
+        <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
             Our Strengths
           </h2>
@@ -86,7 +86,7 @@ export default function AboutUs() {
       {/* Mission, Vision, Core Values */}
       <div className="flex flex-col">
       {/* Mission Section */}
-      <section 
+      <section id="Mission"
         className="relative h-[70vh] flex items-center justify-center text-center text-white"
         style={{
           backgroundImage: `url(${MISSION_IMG})`,
@@ -97,7 +97,7 @@ export default function AboutUs() {
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/50" />
 
-        <div id="Mission" className="relative z-10 max-w-3xl px-6">
+        <div className="relative z-10 max-w-3xl px-6">
           <div className="flex items-center justify-center mb-4">
             <Target className="w-10 h-10 text-primary" />
           </div>
