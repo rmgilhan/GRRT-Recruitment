@@ -19,17 +19,42 @@ export default function LoginModal({ onClose, onSwitchToSignUp }: LoginModalProp
   const [password, setPassword] = useState<string>("");
   const [isActive, setIsActive] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false); // 👈 Track loading state
+  const [isWakingUp, setIsWakingUp] = useState<boolean>(false); // 👈 Track Render delay
+
   const { authenticate } = useUser();
   const navigate = useNavigate();
+
+  // 1. Warm up the server the moment the modal opens
+  useEffect(() => {
+    fetch("https://grrt-backend.onrender.com/GRRT/jobs").catch(() => {});
+  }, []);
+
   useEffect(() => {
     setIsActive(email.trim() !== "" && password !== "");
   }, [email, password]);
  
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
-   e.preventDefault();
-   await authenticate(email, password);
-   navigate("/Services"); // 👈 redirect properly
-   onClose(); // 👈 close modal after login
+    e.preventDefault();
+    setLoading(true);
+
+    // 2. If backend doesn't respond in 4s, show the "Waking up" message
+    const wakeTimer = setTimeout(() => {
+      setIsWakingUp(true);
+    }, 4000);
+
+    try {
+      await authenticate(email, password);
+      clearTimeout(wakeTimer);
+      navigate("/Services");
+      onClose();
+    } catch (error) {
+      clearTimeout(wakeTimer);
+      setIsWakingUp(false);
+      console.error("Login failed", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const clearForm = () => {
@@ -67,32 +92,46 @@ export default function LoginModal({ onClose, onSwitchToSignUp }: LoginModalProp
               required
             />
           </div>
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
+          <div className="relative">
+            <label htmlFor="password" className="block text-xs font-bold text-gray-500 uppercase mb-1">
               Password
             </label>
             <input
               type={showPassword ? "text" : "password"}
               id="password"
-              className="w-full mt-1 px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-emerald-300"
+              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-300 transition-all"
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+            <button 
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-8 text-gray-400 text-xs hover:text-emerald-600"
+            >
+              {showPassword ? "HIDE" : "SHOW"}
+            </button>
           </div>
-          <button
-            type="submit"
-            disabled={!isActive}
-            className={`w-full py-2 rounded text-white ${
-              isActive ? "bg-amber-500 hover:bg-amber-600" : "bg-gray-300 cursor-not-allowed"
-            }`}
-          >
-            Sign In
-          </button>
+
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={!isActive || loading}
+              className={`w-full py-2 rounded text-white font-bold shadow-md transition-all transform active:scale-95 flex justify-center items-center gap-2 ${
+                isActive && !loading ? "bg-amber-500 hover:bg-amber-600" : "bg-gray-300 cursor-not-allowed"
+              }`}
+            >
+              {loading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Authenticating...
+                </>
+              ) : (
+                "Sign In"
+              )}
+            </button>
+          </div>
         </form>
       </div>
     </div>

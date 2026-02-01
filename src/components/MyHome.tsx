@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Briefcase, Users, RefreshCw, MapPin, Phone, Mail } from 'lucide-react';
 import { HashLink as HasLink } from 'react-router-hash-link';
@@ -11,6 +11,11 @@ const App = () => {
     const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+  // Just a simple fetch to wake up Render while the user is looking at the landing page
+  fetch("https://your-backend.onrender.com/health-check").catch(() => {});
+}, []);
 
     const handleFindJobs = () => {
         localStorage.setItem("showJobsMenu", "true");

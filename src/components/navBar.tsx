@@ -51,8 +51,6 @@ useEffect(() => {
   // ✅ Determine which nav items to render
   let navItems: NavItem[] = [];
 
-  console.log(user);
-
   if (!user?.id) {
   // Regular visitor / job seeker
      navItems = [
@@ -63,10 +61,7 @@ useEffect(() => {
       { to: "/Contact", icon: Mail, label: "Contact" },
     ];
   }
-  // else if (user?.roles?.includes("Admin") || user?.roles?.includes("Manager")) {
   else {
-    // Admin / Manager only
-    // console.log("I'm here..");
     navItems = [
       { to: "/", icon: Home, label: "Dashboard" },
       { to: "/Jobs", icon: Briefcase, label: "Jobs" },
@@ -74,13 +69,7 @@ useEffect(() => {
       { to: "/Users", icon: UserPlus, label: "Users" },
     ];
   } 
-  //   else {
-  //   // Logged-in regular user (optional, can reuse visitor items)
-  //   navItems = [
-  //     { to: "/", icon: Home, label: "Home" },
-  //     { to: "/Jobs", icon: Briefcase, label: "Jobs" },
-  //   ];
-  // }
+
 
   const isActive = (path: string) => location.pathname === path;
 
