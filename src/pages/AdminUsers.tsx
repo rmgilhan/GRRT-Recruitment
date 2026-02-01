@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-// import { User } from "../types/user";
+import React, { useEffect, useState, useContext } from "react";
+import UserContext from "../context/UserContext";
 import AddUserModal from "../components/users/UserRegisterModal";
 import EditPrivilegeModal from "../components/users/EditPrivilegeModal";
 import ChangePasswordModal from "../components/users/ChangePasswordModal";
@@ -11,111 +10,94 @@ import * as UserTypes from "../types/user.ts";
 import Swal from "sweetalert2";
 
 type User = UserTypes.User;
-type UserContextType = UserTypes.UserContextType;
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 export default function AdminUsers() {
-  // const [users, setUsers] = useState<User[]>([]);
+  const { user } = useContext(UserContext)!;
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [activeModal, setActiveModal] = useState<
-    "add" | "privilege" | "password" | "profile" | null
-  >(null);
+  const [activeModal, setActiveModal] = useState<"add" | "privilege" | "password" | "profile" | null>(null);
   const [activeTab, setActiveTab] = useState<"users" | "profile">("users");
 
-  const { userProfile, 
+  const { 
+    userProfile, 
     myProfile, 
     getAllUsers, 
-    usersData,
+    usersData, 
     userPasswordUpdate, 
     setPrivilege, 
-    removeUser, updateProfile } = useUser();
+    removeUser, 
+    updateProfile 
+  } = useUser();
 
-  // ✅ Fetch all users once on mount
+    // Check permissions for Tab Visibility
+  const isAdminOrManager = user?.roles?.includes("Admin") || user?.roles?.includes("Manager");
+  
   useEffect(() => {
     getAllUsers();
     userProfile();
   }, []);
 
-  const handleAddUser = () => setActiveModal("add");
-
-  const handleEditPrivilege = (user: User) => {
-    setSelectedUser(user);
-    setActiveModal("privilege");
-  };
-
-  const handleChangePassword = (user: User) => {
-    setSelectedUser(user);
-    setActiveModal("password");
-  };
-
-  const handleUpdateProfile = (user: User) => {
-    setSelectedUser(user);
-    setActiveModal("profile");
-  };
-
-  const handlePrivilegeUpdate = async (payload: { roles: string[] }) => {
-  if (!selectedUser) return;
-
-  const selectedRole = payload.roles[0]; // extract the first role
-
-  await setPrivilege(selectedUser._id, selectedRole);
-
-  // Refresh users list
-  getAllUsers();
-
-  handleModalClose();
-};
-
-
-  // ✅ Delete user with API + local sync
-
-const handleDelete = async (id: string) => {
-  const result = await Swal.fire({
-    title: "Delete this user?",
-    text: "This action cannot be undone.",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-    confirmButtonText: "Yes, delete!",
-    cancelButtonText: "Cancel",
-  });
-
-  if (result.isConfirmed) {
-    await removeUser(id); // your existing removeUser handles success/error
-    getAllUsers();        // refresh table
-  }
-};
-
+  useEffect(() => {
+    if (user && !isAdminOrManager) {
+      setActiveTab("profile");
+    }
+  }, [user, isAdminOrManager]);
 
   const handleModalClose = () => {
     setSelectedUser(null);
     setActiveModal(null);
   };
 
-  //userProfile();
-  console.log(myProfile);
+  const handlePrivilegeUpdate = async (payload: { roles: string[] }) => {
+    if (!selectedUser) return;
+    const selectedRole = payload.roles[0];
+    await setPrivilege(selectedUser._id, selectedRole);
+    getAllUsers();
+    handleModalClose();
+  };
+
+  const handleDelete = async (id: string) => {
+    const result = await Swal.fire({
+      title: "Delete this user?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete!",
+    });
+
+    if (result.isConfirmed) {
+      await removeUser(id);
+      getAllUsers();
+    }
+  };
+
+
 
   return (
-    <div className="w-full p-0 md:p-6">
-  {/* 👑 Admin Section Tabs */}
-  <div className="w-full flex justify-start space-x-2 md:space-x-4 border-b md:w-5/6 md:mx-auto">
+    <div className="w-full max-w-7xl mx-auto p-4 md:p-6 lg:p-10">
+      
+      {/* 👑 Admin Section Tabs - Centered Wrapper */}
+      <div className="w-full flex justify-start space-x-2 md:space-x-4 border-b border-gray-200 mb-8">
+        {/* FIX: Replaced 'if' with logical AND '&&' */}
+        {isAdminOrManager && (
+          <button
+            className={`px-6 py-3 font-bold transition-all ${
+              activeTab === "users"
+                ? "text-blue-600 border-b-2 border-blue-600 bg-gray-50"
+                : "text-gray-500 hover:text-blue-600 hover:bg-gray-50"
+            }`}
+            onClick={() => setActiveTab("users")}
+          >
+            👥 User Management
+          </button>
+        )}
+        
         <button
-          className={`px-4 py-2 font-semibold ${
-            activeTab === "users"
-              ? "text-blue-600 bg-gray-200 rounded"
-              : "text-gray-500 bg-white hover:text-blue-600"
-          }`}
-          onClick={() => setActiveTab("users")}
-        >
-          👥 User Management
-        </button>
-        <button
-          className={`px-4 py-2 font-semibold ${
+          className={`px-6 py-3 font-bold transition-all ${
             activeTab === "profile"
-              ? "text-blue-600 bg-gray-200 rounded"
-              : "text-gray-500 hover:text-blue-600"
+              ? "text-blue-600 border-b-2 border-blue-600 bg-gray-50"
+              : "text-gray-500 hover:text-blue-600 hover:bg-gray-50"
           }`}
           onClick={() => setActiveTab("profile")}
         >
@@ -123,48 +105,44 @@ const handleDelete = async (id: string) => {
         </button>
       </div>
 
-      {/* ------------------------ */}
       {/* 👥 User Management Tab */}
-      {/* ------------------------ */}
-      {activeTab === "users" && (
-  <>      
-    <div className="w-full pt-10 pb-10 space-y-2">
-      {myProfile && myProfile.roles?.includes("Admin") && (
-      <div className="w-full flex justify-end space-x-2 md:w-3/4 md:mx-auto">
-        <button
-          onClick={handleAddUser}
-          className="bg-amber-500 text-white px-2 py-1 rounded shadow hover:bg-amber-600"
-        >
-          + Add User
-        </button>
-      </div>
+      {activeTab === "users" && isAdminOrManager && (
+        <div className="space-y-6 animate-fadeIn">
+          {myProfile?.roles?.includes("Admin") && (
+            <div className="flex justify-end">
+              <button
+                onClick={() => setActiveModal("add")}
+                className="bg-amber-500 text-white px-5 py-2 rounded-lg shadow-md hover:bg-amber-600 transition-transform active:scale-95 flex items-center gap-2"
+              >
+                <span className="text-xl font-bold">+</span> Add User
+              </button>
+            </div>
+          )}
+
+          <div className="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
+            {myProfile && (
+              <UserTable
+                users={usersData}
+                onEditPrivilege={(u) => {
+                  setSelectedUser(u);
+                  setActiveModal("privilege");
+                }}
+                onDelete={handleDelete}
+                account={myProfile}
+              />
+            )}
+          </div>
+        </div>
       )}
 
-      {myProfile && (
-      <UserTable
-        users={usersData}
-        onEditPrivilege={(user) => {
-          setSelectedUser(user);
-          setActiveModal("privilege");
-        }}
-        onDelete={handleDelete}
-        account={myProfile}
-      />
-      )}
-    </div> 
-  </>       
-)}          
-{/* ------------------------ */}
-{/* 🙍‍♂️ Personal Profile Tab */}
-{/* ------------------------ */}
-{activeTab === "profile" && (
-  <>
-    <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto mt-4">
-      <h2 className="text-xl font-semibold text-center mb-6 text-blue-600">
-        My Profile
-      </h2>
+      {/* 🙍‍♂️ Personal Profile Tab */}
+      {activeTab === "profile" && (
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 max-w-2xl mx-auto mt-4 animate-fadeIn">
+          <h2 className="text-2xl font-bold text-center mb-8 text-gray-800 border-b pb-4">
+            My Profile
+          </h2>
 
-      {myProfile ? (
+          {myProfile ? (
         <div className="space-y-4 font-openSans text-sm">
           <div>
             <label className="font-semibold text-gray-700">Full Name:</label>
@@ -181,7 +159,7 @@ const handleDelete = async (id: string) => {
             </p>
           </div>
 
-          <div className="flex gap-3 pt-4">
+          <div className="flex flex-col sm:flex-row gap-3 pt-6">
             <button
               onClick={() => {
                 if (!myProfile) return; // guard against null
@@ -206,11 +184,13 @@ const handleDelete = async (id: string) => {
           </div>
         </div>
       ) : (
-        <p className="text-center text-gray-500">Loading profile...</p>
+            <div className="text-center py-20">
+               <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
+               <p className="text-gray-400 mt-4 text-sm font-medium uppercase tracking-widest">Synchronizing Profile...</p>
+            </div>
+          )}
+        </div>
       )}
-    </div>
-  </>
-)}
 
       {/* ✅ Modals */}
       {activeModal === "add" && <AddUserModal onClose={handleModalClose} onRefresh={getAllUsers} />}
@@ -222,7 +202,7 @@ const handleDelete = async (id: string) => {
           currentEmail={selectedUser.email}
           currentRoles={selectedUser.roles}
           onClose={handleModalClose}
-          onSave={handlePrivilegeUpdate} // make sure this function exists
+          onSave={handlePrivilegeUpdate}
         />
       )}
       {activeModal === "password" && selectedUser && (

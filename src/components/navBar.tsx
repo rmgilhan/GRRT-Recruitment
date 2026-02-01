@@ -63,7 +63,8 @@ useEffect(() => {
       { to: "/Contact", icon: Mail, label: "Contact" },
     ];
   }
-  else if (user?.roles?.includes("Admin") || user?.roles?.includes("Manager")) {
+  // else if (user?.roles?.includes("Admin") || user?.roles?.includes("Manager")) {
+  else {
     // Admin / Manager only
     // console.log("I'm here..");
     navItems = [
@@ -72,13 +73,14 @@ useEffect(() => {
       // { to: "/Candidates", icon: Layers, label: "Candidates" },
       { to: "/Users", icon: UserPlus, label: "Users" },
     ];
-  } else {
-    // Logged-in regular user (optional, can reuse visitor items)
-    navItems = [
-      { to: "/", icon: Home, label: "Home" },
-      { to: "/Jobs", icon: Briefcase, label: "Jobs" },
-    ];
-  }
+  } 
+  //   else {
+  //   // Logged-in regular user (optional, can reuse visitor items)
+  //   navItems = [
+  //     { to: "/", icon: Home, label: "Home" },
+  //     { to: "/Jobs", icon: Briefcase, label: "Jobs" },
+  //   ];
+  // }
 
   const isActive = (path: string) => location.pathname === path;
 

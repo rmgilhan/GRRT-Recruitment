@@ -36,8 +36,8 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-gray-100 mx-2 rounded-xl shadow-lg p-6 w-full max-w-md md:mx-0">
-        <div className="max-w-5xl p-2 -m-6 bg-emerald-600 text-lg rounded-t-xl font-medium text-center mb-4 text-gray-50">
+      <div className="bg-gray-100 mx-4 rounded-xl shadow-lg p-6 w-full max-w-md md:mx-0">
+        <div className="max-w-5xl p-2 -m-6 bg-emerald-500 text-lg rounded-t-xl font-medium text-center mb-4 text-gray-50">
           <h2>
           Change Password
           </h2>
@@ -77,7 +77,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
             <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
               Cancel
             </button>
-            <button type="submit" disabled={isSubmitting} className="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700 disabled:opacity-50">
+            <button type="submit" disabled={isSubmitting} className="px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-700 disabled:opacity-50">
               {isSubmitting ? "Updating..." : "Change Password"}
             </button>
           </div>

@@ -43,7 +43,7 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white mx-2 rounded-xl shadow-lg p-6 w-full max-w-md md:mx-0">
-        <div className="max-w-5xl p-2 -m-6 bg-emerald-600 text-lg font-medium rounded-t-xl text-center mb-4 text-gray-50">
+        <div className="max-w-5xl p-2 -m-6 bg-emerald-500 text-lg font-medium rounded-t-xl text-center mb-4 text-gray-50">
           <h2>
             Update Profile
           </h2>
