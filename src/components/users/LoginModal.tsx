@@ -46,7 +46,7 @@ export default function LoginModal({ onClose, onSwitchToSignUp }: LoginModalProp
     try {
       await authenticate(email, password);
       clearTimeout(wakeTimer);
-      navigate("/Services");
+      navigate("/");
       onClose();
     } catch (error) {
       clearTimeout(wakeTimer);
