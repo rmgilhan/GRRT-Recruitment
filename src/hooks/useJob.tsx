@@ -99,6 +99,8 @@ export default function useJob() {
    * ✏️ Update Job
    */
   const updateJob = async (jobId: string, updatedData: Partial<Job>): Promise<void> => {
+    console.log(jobId);
+    console.log(updatedData);
     try {
       const response = await axios.put(
         `${API_URL}/jobs/${jobId}`,

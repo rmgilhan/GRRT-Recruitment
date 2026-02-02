@@ -1,0 +1,15 @@
+# Allow all bots to crawl the site
+User-agent: *
+Allow: /
+Allow: /Jobs
+Allow: /Services
+Allow: /AboutUs
+
+# Prevent search engines from showing private/admin pages
+Disallow: /Users
+Disallow: /Admin
+Disallow: /CandidateProfile/
+Disallow: /api/
+
+# Link to your sitemap
+Sitemap: https://grrt-recruitment.vercel.app/sitemap.xml

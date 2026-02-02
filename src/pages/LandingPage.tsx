@@ -1,10 +1,16 @@
 import React from 'react';
-import Home from '../components/MyHome'
+import Home from '../components/MyHome';
+import SEO from '../components/SEO'; // Import your new component
 
-export default function() {
+export default function LandingPage() {
 	return (
 	<>
-		<Home/>
+		<SEO 
+		  title="Home" 
+		  description="Connecting top talent with leading companies in the Philippines."
+		  image="https://grrt-recruitment.vercel.app/social-preview.jpg" 
+		/>
+		<Home />
 	</>		
-	) 	
+	); 	
 }
