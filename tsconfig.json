@@ -23,16 +23,17 @@
     "noUncheckedSideEffectImports": true,
 
     /* Path aliases */
-    "baseUrl": "src",
+    "baseUrl": ".", 
     "paths": {
-      "@types/*": ["types/*"],
-      "@components/*": ["components/*"],
-      "@context/*": ["context/*"],
-      "@hooks/*": ["hooks/*"],
-      "@utils/*": ["utils/*"],
-      "@lib/*": ["lib/*"],
-      "@config/*": ["config/*"],
-      "@interfaces/*": ["interfaces/*"],
+      "@types/*": ["src/types/*"],
+      "@components/*": ["src/components/*"],
+      "@components": ["src/components"],
+      "@context/*": ["src/context/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@utils/*": ["src/utils/*"],
+      "@lib/*": ["src/lib/*"],
+      "@config/*": ["src/config/*"],
+      "@interfaces/*": ["src/interfaces/*"]
     }
   },
   "include": ["src", "src/types"]
