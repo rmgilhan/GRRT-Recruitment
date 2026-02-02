@@ -45,12 +45,23 @@ export default function LinkedInSearchPage() {
   };
 
   const handleAddToReview = async (user: any) => {
-    await addToInitial({
-      name: user.name,
-      linkedInUrl: user.linkedInUrl,
-      positionApplied: user.positionApplied,
-    });
-    alert(`${user.name} added to Initial Screening`);
+    try {
+      await addToInitial({
+        name: user.name,
+        linkedInUrl: user.linkedInUrl,
+        positionApplied: user.positionApplied,
+      });
+      
+      // ✅ Using the imported Swal library fixes the 'Unused Import' error
+      Swal.fire({
+        title: "Success!",
+        text: `${user.name} added to Initial Screening`,
+        icon: "success",
+        confirmButtonColor: "#fbbf24", // Matches your amber button
+      });
+    } catch (err) {
+      Swal.fire("Error", "Could not add candidate.", "error");
+    }
   };
 
   return (
