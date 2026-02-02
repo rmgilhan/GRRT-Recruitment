@@ -7,6 +7,8 @@ import { motion } from "framer-motion";
 import useJob from "@hooks/useJob";
 import useCandidates from "@hooks/useCandidates";
 import Pagination from "@components/ui/pagination";
+import SEO from "@components/SEO"; // 👈 Add your SEO component
+import Swal from "sweetalert2"; // 👈 Use Swal for consistent UI
 
 export default function LinkedInSearchPage() {
   const [position, setPosition] = useState("");
@@ -53,6 +55,8 @@ export default function LinkedInSearchPage() {
 
   return (
     <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
+      {/* 1. Use the SEO component here */}
+      <SEO title="LinkedIn Search" description="Sourcing tool for GRRT." />
       <h1 className="text-2xl sm:text-3xl font-bold text-center">LinkedIn Search Tool</h1>
 
       {/* Search Form */}

@@ -13,7 +13,7 @@ import AboutUs from "./components/AboutUs";
 import Contact from "./components/Contact";
 import Users from "./pages/AdminUsers";
 import Jobs from "./pages/JobsPage";
-import LinkedlnSearch from "./pages/LinkedlnPageSearch";
+// import LinkedlnSearch from "./pages/LinkedlnPageSearch";
 import Candidates from "./pages/Candidates";
 import CandidateProfile from "./pages/CandidateProfile";
 import { UserProvider } from '@context/UserContext';
@@ -58,7 +58,7 @@ function App() {
               <Route path="/Jobs" element={<Jobs />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
-              <Route path="/LinkedlnSearch" element={<LinkedlnSearch />} />
+              {/*<Route path="/LinkedlnSearch" element={<LinkedlnSearch />} />*/}
               <Route path="/Candidates" element={<Candidates />} />
               <Route path="/candidateProfile/:id" element={<CandidateProfile />} />
             </Routes>
