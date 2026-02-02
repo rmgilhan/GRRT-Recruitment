@@ -14,7 +14,7 @@ const App = () => {
 
     useEffect(() => {
   // Just a simple fetch to wake up Render while the user is looking at the landing page
-  fetch("https://your-backend.onrender.com/health-check").catch(() => {});
+  fetch("https://grrt-backend.onrender.com/health-check").catch(() => {});
 }, []);
 
     const handleFindJobs = () => {
