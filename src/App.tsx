@@ -13,16 +13,14 @@ import AboutUs from "./components/AboutUs";
 import Contact from "./components/Contact";
 import Users from "./pages/AdminUsers";
 import Jobs from "./pages/JobsPage";
-// import useJob from "./hooks/useJob";
 
 import Candidates from "./pages/Candidates";
 import CandidateProfile from "./pages/CandidateProfile";
-
+import { UserProvider } from '@context/UserContext';
 import TawkChat from './components/TawkChat';
 
 function App() {
-  // const { listJobs } = useJob();
-
+  
   useEffect(() => {
     // Fire and forget: Wake up the Render instance immediately
     const wakeServer = async () => {
@@ -42,13 +40,9 @@ function App() {
     wakeServer();
   }, []);
 
-  // useEffect(() => {
-    // Silent wake-up call to Render backend
-    // listJobs(); 
-  // }, []);
-
   return (    
     <Router>
+      <UserProvider>
         {/* Added h-full and flex-grow to ensure footer stays at the bottom */}
         <div className="w-full max-w-7xl mx-auto pt-28 px-4 min-h-screen flex flex-col bg-gray-50">
           <ScrollToTop />
@@ -73,6 +67,7 @@ function App() {
 
           <Footer />
         </div>
+      </UserProvider>
     </Router>
   );
 }

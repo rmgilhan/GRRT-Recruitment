@@ -23,7 +23,7 @@ type ExpandState = {
 };
 
 const JobList: React.FC = () => {
-  const { jobsData, listJobs, loading } = useJob();
+  const { jobsData, listJobs } = useJob();
 
   const [expandedJobs, setExpandedJobs] = useState<Record<string, ExpandState>>({});
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
