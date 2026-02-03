@@ -23,7 +23,7 @@ type ExpandState = {
 };
 
 const JobList: React.FC = () => {
-  const { jobsData, listJobs } = useJob();
+  const { jobsData, listJobs, loading } = useJob();
 
   const [expandedJobs, setExpandedJobs] = useState<Record<string, ExpandState>>({});
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
@@ -53,11 +53,50 @@ const JobList: React.FC = () => {
     setSelectedJob(null);
   };
 
+  // --- 🟢 NEW LOADING ANIMATION (Skeleton Screen) ---
+  if (loading) {
+    return (
+      <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="border border-gray-200 rounded-xl p-5 shadow-sm bg-white overflow-hidden">
+            {/* Title Skeleton */}
+            <div className="h-6 bg-gray-200 rounded-md w-3/4 mb-4 animate-pulse"></div>
+            
+            {/* Description Skeleton */}
+            <div className="space-y-2 mb-4">
+              <div className="h-3 bg-gray-100 rounded w-full animate-pulse"></div>
+              <div className="h-3 bg-gray-100 rounded w-5/6 animate-pulse"></div>
+            </div>
+
+            {/* List Item Skeletons */}
+            <div className="space-y-3 mb-4">
+              <div className="h-3 bg-gray-50 rounded w-1/2 animate-pulse"></div>
+              <div className="h-3 bg-gray-50 rounded w-2/3 animate-pulse"></div>
+            </div>
+
+            {/* Bottom Badges Skeleton */}
+            <div className="flex justify-between items-center mt-6">
+              <div className="h-6 bg-gray-100 rounded-full w-20 animate-pulse"></div>
+              <div className="h-6 bg-gray-100 rounded-md w-16 animate-pulse"></div>
+            </div>
+
+            {/* Button Skeleton */}
+            <div className="mt-5 flex justify-center">
+              <div className="h-10 bg-indigo-100 rounded-lg w-1/2 animate-pulse"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  // --- 🔴 ACTUAL EMPTY STATE ---
   if (!jobsData || jobsData.length === 0) {
     return (
-      <p className="text-gray-500 text-center py-10">
-        No job postings found.
-      </p>
+      <div className="text-center py-20 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+        <p className="text-gray-500 font-medium">No active job postings at the moment.</p>
+        <p className="text-sm text-gray-400">Please check back later!</p>
+      </div>
     );
   }
 
