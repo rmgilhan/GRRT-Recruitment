@@ -13,7 +13,7 @@ import AboutUs from "./components/AboutUs";
 import Contact from "./components/Contact";
 import Users from "./pages/AdminUsers";
 import Jobs from "./pages/JobsPage";
-import useJob from "./hooks/useJob";
+// import useJob from "./hooks/useJob";
 
 import Candidates from "./pages/Candidates";
 import CandidateProfile from "./pages/CandidateProfile";
@@ -21,7 +21,7 @@ import CandidateProfile from "./pages/CandidateProfile";
 import TawkChat from './components/TawkChat';
 
 function App() {
-  const { listJobs } = useJob();
+  // const { listJobs } = useJob();
 
   useEffect(() => {
     // Fire and forget: Wake up the Render instance immediately
@@ -42,10 +42,10 @@ function App() {
     wakeServer();
   }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
     // Silent wake-up call to Render backend
-    listJobs(); 
-  }, []);
+    // listJobs(); 
+  // }, []);
 
   return (    
     <Router>
