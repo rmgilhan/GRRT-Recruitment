@@ -13,7 +13,7 @@ import AboutUs from "./components/AboutUs";
 import Contact from "./components/Contact";
 import Users from "./pages/AdminUsers";
 import Jobs from "./pages/JobsPage";
-import useJob from "@hooks/useJob";
+import useJob from "./hooks/useJob";
 
 import Candidates from "./pages/Candidates";
 import CandidateProfile from "./pages/CandidateProfile";
